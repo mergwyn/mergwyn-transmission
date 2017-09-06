@@ -1,3 +1,20 @@
+# == Class: transmission::params
+#
+# This class handles the parameter setting for the module
+#
+# == Actions:
+# 
+# * Sets variable based on OS type.
+#   
+# === Authors:
+# 
+# Craig Watson <craig@cwatson.org>
+# 
+# === Copyright: 
+#   
+# Copyright (C) Craig Watson
+# Published under the Apache License v2.0
+#   
 class transmission::params {
 
   $packages = [
@@ -6,11 +23,10 @@ class transmission::params {
     'transmission-daemon',
   ]
 
-  #if $facts['os']['release']['full'] == '16.04' {
-  if ($::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '16.04')) {
+  if $facts['os']['release']['full'] == '16.04' {
     $use_systemd = true
     $home_dir    = "/home/${::transmission::user}/.config/transmission-daemon"
-    $config_dir  = "${::transmission::params::home_dir}"
+    $config_dir  = $::transmission::params::home_dir
     $stop_cmd    = '/bin/systemctl stop transmission-daemon'
     $start_cmd   = '/bin/systemctl start transmission-daemon'
   } else {
