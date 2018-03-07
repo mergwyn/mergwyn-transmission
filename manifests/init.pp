@@ -42,6 +42,7 @@ class transmission (
   String                 $rpc_username            = 'transmission',
   Integer                $rpc_port                = 9091,
   Variant[Undef,String]  $rpc_whitelist           = undef,
+  Variant[Undef,String]  $script_done_filename    = undef,
   String                 $service_ensure          = 'running',
   Boolean                $service_enable          = true,
   Variant[Undef,Integer] $speed_limit_down        = undef,
@@ -52,8 +53,8 @@ class transmission (
   Variant[Undef,String]  $watch_dir               = undef,
 ) {
 
-  if $::osfamily != 'Debian' {
-    fail "Your osfamily (${::osfamily}) is not supported by this module"
+  if $facts['os']['family'] != 'Debian' {
+    fail "Your osfamily (${facts[os][family]}) is not supported by this module"
   }
 
   include ::transmission::params

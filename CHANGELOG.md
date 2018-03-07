@@ -1,14 +1,22 @@
 # Change Log
 
+## 2.2.0
+
+### 2018-01-31 - Feature Release
+
+#### Class: `transmission`
+  * Adding new parameter to enable on-complete scripts
+
 ## 2.1.0
 
-### TBC - Feature Release
+### 2017-09-01 - Feature Release
 
 #### Class: `transmission`
   * Adding some more parameters into the main class
 
 #### Class: `transmission::params`
   * Creating new class to hold internally-derived parameters
+  * Fixing cron syntax bug when using remote command auth
 
 #### Class: `transmission::service`
   * Adding systemd service files for Ubuntu 16.04
