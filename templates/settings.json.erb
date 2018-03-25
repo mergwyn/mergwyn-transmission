@@ -87,9 +87,13 @@
     "rpc-url": "<%= scope['::transmission::rpc_base_url'] %>",
     "rpc-username": "<%= scope['::transmission::rpc_username'] %>",
 <% if scope['::transmission::rpc_whitelist'] -%>
+    "rpc-host-whitelist": "127.0.0.1,<%= scope['::transmission::rpc_whitelist'] %>",
+    "rpc-host-whitelist-enabled": true,
     "rpc-whitelist": "127.0.0.1,<%= scope['::transmission::rpc_whitelist'] %>",
     "rpc-whitelist-enabled": true,
 <% else -%>
+    "rpc-host-whitelist": "127.0.0.1",
+    "rpc-host-whitelist-enabled": false,
     "rpc-whitelist": "127.0.0.1",
     "rpc-whitelist-enabled": false,
 <% end -%>
