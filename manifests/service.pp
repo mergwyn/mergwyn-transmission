@@ -18,7 +18,7 @@
 class transmission::service {
 
   exec { 'replace_transmission_config':
-    command     => "${::transmission::params::stop_cmd} && cp -a /etc/transmission-daemon/settings.json.puppet /etc/transmission-daemon/settings.json && ${::transmission::params::start_cmd}",
+    command     => "${::transmission::params::stop_cmd} && cp -a /etc/transmission-daemon/settings.json.puppet ${::transmission::params::config_dir}/settings.json && ${::transmission::params::start_cmd}",
     refreshonly => true,
   }
 
