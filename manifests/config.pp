@@ -29,7 +29,7 @@ class transmission::config {
 
     # == Transmission Home
 
-  file { $::transmission::params::home_dir:
+  file { $::transmission::params::config_dir:
     ensure => directory,
     mode   => '0770',
     owner  => $::transmission::user,
@@ -42,7 +42,7 @@ class transmission::config {
     group   => $::transmission::group,
     mode    => '0600',
     content => template('transmission/settings.json.erb'),
-    require => File[$::transmission::params::home_dir],
+    require => File[$::transmission::params::config_dir],
   }
 
   # == Blocklist update cron
