@@ -35,7 +35,7 @@ class transmission::config {
     owner  => $::transmission::user,
     group  => $::transmission::group,
   }
-  
+
   file { "${::transmission::params::config_dir}/settings.json":
     ensure  => file,
     owner   => $::transmission::user,
