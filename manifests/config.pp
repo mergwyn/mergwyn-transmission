@@ -17,39 +17,65 @@
 #
 class transmission::config {
 
-  # == Defaults
-
-  File {
-    owner   => $::transmission::user,
-    group   => $::transmission::group,
-    require => Package[$::transmission::params::packages],
-  }
-
   # == Transmission config
 
-    # == Transmission Home
-
-  file { $::transmission::params::config_dir:
-    ensure => directory,
-    mode   => '0770',
-    owner  => $::transmission::user,
-    group  => $::transmission::group,
+  file { '/etc/transmission-daemon':
+    ensure  => 'directory',
+    owner   => $::transmission::owner,
+    group   => $::transmission::group,
+    mode    => '0770',
+    require => Package['transmission-daemon'],
   }
 
-  file { "${::transmission::params::config_dir}/settings.json":
-    ensure  => file,
-    owner   => $::transmission::user,
+  file { '/etc/transmission-daemon/settings.json.puppet':
+    ensure  => 'file',
+    owner   => $::transmission::owner,
     group   => $::transmission::group,
     mode    => '0600',
     content => template('transmission/settings.json.erb'),
-    require => File[$::transmission::params::config_dir],
+    require => File['/etc/transmission-daemon'],
+  }
+
+  # == Transmission Home
+
+  file { $::transmission::params::home_dir:
+    ensure  => 'directory',
+    owner   => $::transmission::owner,
+    group   => $::transmission::group,
+    mode    => '0770',
+    require => Package['transmission-daemon'],
+  }
+
+  if $::transmission::params::download_root != $::transmission::params::home_dir {
+    file { $::transmission::params::download_root:
+      ensure  => 'directory',
+      owner   => $::transmission::owner,
+      group   => $::transmission::group,
+      mode    => '0770',
+      require => Package['transmission-daemon'],
+    }
+  }
+
+  file { $::transmission::params::download_dirs:
+    ensure  => 'directory',
+    owner   => $::transmission::owner,
+    group   => $::transmission::group,
+    mode    => '0770',
+    require => File[$::transmission::params::download_root]
+  }
+
+  file { "${::transmission::params::home_dir}/settings.json":
+    ensure  => 'link',
+    target  => '/etc/transmission-daemon/settings.json',
+    require => File[$::transmission::params::home_dir],
   }
 
   # == Blocklist update cron
 
+
   cron { 'transmission_update_blocklist':
     ensure  => $::transmission::params::cron_ensure,
-    command => "/usr/bin/transmission-remote${::transmission::params::remote_command_auth} --blocklist-update > /dev/null",
+    command => "${::transmission::params::remote_command} --blocklist-update > /dev/null",
     require => Package['transmission-cli','transmission-common','transmission-daemon'],
     user    => 'root',
     minute  => '0',

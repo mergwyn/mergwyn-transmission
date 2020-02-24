@@ -21,20 +21,18 @@ class transmission::install {
 
   if $::transmission::manage_ppa {
     apt::ppa { 'ppa:transmissionbt/ppa': }
-
-    Package[$::transmission::params::packages] {
+    Package {
       require => Apt::Ppa['ppa:transmissionbt/ppa']
     }
-
   }
 
-  package { $::transmission::params::packages:
+  package { ['transmission-cli','transmission-common','transmission-daemon']:
     ensure  => present,
   }
 
-  if $::transmission::blocklist_url != undef and $::transmission::service_ensure != 'running' {
+  if $::transmission::blocklist_url != 'http://www.example.com/blocklist' and $::transmission::service_ensure == 'running' {
     exec { 'transmission_download_blocklists':
-      command => "/usr/bin/transmission-remote${::transmission::params::remote_command_auth} --blocklist-update > /dev/null",
+      command => "${::transmission::params::remote_command} --blocklist-update > /dev/null",
       creates => "${::transmission::params::home_dir}/blocklists/blocklist.bin",
       require => Service['transmission-daemon'],
     }
